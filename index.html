@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://st.max.ru/js/max-web-app.js"></script>
+  <title>Трак — грузовые автозапчасти в Якутске</title>
+  <meta name="description" content="Магазин грузовых автозапчастей Трак в Якутске, микрорайон Марха, улица Строда, 40. Телефон, WhatsApp, Telegram и карта проезда.">
+  <link rel="canonical" href="https://truck14.ru/">
+  <style>
+    :root {
+      --lime: #CCFF00;
+      --black: #000000;
+      --text: #ffffff;
+      --muted: #c8c8c8;
+      --line: rgba(204, 255, 0, 0.22);
+      --max: 1200px;
+      --font: Arial, Helvetica, sans-serif;
+      --display: "Arial Black", "Arial Bold", Arial, Helvetica, sans-serif;
+      --tap: 2.75rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    html, body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 1rem;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .promo__title, .section__title {
+      font-family: var(--display);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    a { color: var(--lime); }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--lime);
+      outline-offset: 3px;
+    }
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--lime);
+      color: #111;
+      padding: .6rem 1rem;
+      z-index: 100;
+      font-weight: 700;
+    }
+    .skip:focus { left: .75rem; top: .75rem; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--black);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header__inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: .85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .logo {
+      display: block;
+      height: 42px;
+      width: auto;
+      max-width: min(220px, 52vw);
+      object-fit: contain;
+      object-position: left center;
+    }
+    .header-phone {
+      color: var(--lime);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: clamp(.95rem, 2.8vw, 1.1rem);
+      white-space: nowrap;
+      min-height: var(--tap);
+      display: inline-flex;
+      align-items: center;
+    }
+    .header-phone:hover { text-decoration: underline; }
+    @media (max-width: 420px) {
+      .header-phone { font-size: .82rem; }
+      .hero__actions .btn { width: 100%; }
+    }
+    main { display: block; }
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 3rem) 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero__grid {
+      display: grid;
+      gap: clamp(1.25rem, 3vw, 2rem);
+      align-items: center;
+    }
+    @media (min-width: 960px) {
+      .hero__grid { grid-template-columns: 1fr 1.05fr; gap: 2.5rem; }
+    }
+    h1 {
+      font-size: clamp(1.75rem, 4.2vw, 3rem);
+      line-height: 1.08;
+      margin: 0 auto 1rem;
+      max-width: 16ch;
+      text-align: center;
+    }
+    .hero__address {
+      margin: 0 0 .75rem;
+      font-weight: 800;
+    }
+    .hero__lead {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0 0 1.5rem;
+      max-width: 42ch;
+    }
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: stretch;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--tap);
+      padding: .7rem 1.15rem;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: .95rem;
+      border: 2px solid var(--lime);
+      border-radius: 8px;
+    }
+    .btn--primary { background: var(--lime); color: #000; }
+    .btn--ghost { background: transparent; color: var(--lime); }
+    .btn:hover { filter: brightness(1.05); }
+    .hero__media {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #000;
+    }
+    .hero__photo {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(68vh, 720px);
+      object-fit: cover;
+      object-position: 48% 26%;
+    }
+    .promo-section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 2.5rem) 1.25rem;
+    }
+    .promo-card {
+      background: #141414;
+      color: #fff;
+      border-radius: 16px;
+      padding: clamp(1.6rem, 4vw, 2.75rem);
+      border: 1px solid rgba(204, 255, 0, 0.28);
+      box-shadow: 0 16px 36px rgba(20, 20, 20, 0.12);
+    }
+    .promo-badge {
+      display: inline-block;
+      background: #CCFF00;
+      color: #141414;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .4rem .85rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .promo-title {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      line-height: 1.15;
+      margin: 0 0 .75rem;
+      color: #fff;
+      text-align: center;
+    }
+    .promo-title span {
+      display: inline-block;
+      color: #CCFF00;
+      white-space: nowrap;
+    }
+    .promo-desc {
+      margin: 0 0 1.25rem;
+      color: #d4d4d4;
+      max-width: 42rem;
+    }
+    .promo-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      margin-bottom: 1.5rem;
+    }
+    .promo-item {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(204,255,0,.25);
+      border-radius: 8px;
+      padding: .7rem 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .promo-item-marker {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #CCFF00;
+      flex-shrink: 0;
+    }
+    .promo-footer {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .promo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--tap);
+      background: #CCFF00;
+      color: #141414;
+      font-weight: 800;
+      text-decoration: none;
+      padding: .75rem 1.6rem;
+      border-radius: 8px;
+    }
+    .promo-btn:hover { filter: brightness(1.05); }
+    .promo-phone-text { color: #bdbdbd; }
+    @media (max-width: 640px) {
+      .promo-btn { width: 100%; }
+    }
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(2rem, 5vw, 3rem) 1.25rem;
+    }
+    .section--line { border-bottom: 1px solid var(--line); }
+    .section__title {
+      font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+      margin: 0 0 1.25rem;
+      text-align: center;
+    }
+    .section__note { color: var(--muted); margin: 0 0 1rem; max-width: 62ch; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .carousel { position: relative; }
+    .carousel__viewport {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #0a0a0a;
+      touch-action: pan-y;
+    }
+    .carousel__track {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      transition: transform .32s ease;
+      will-change: transform;
+    }
+    .carousel__slide {
+      flex: 0 0 100%;
+      min-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: min(58vw, 520px);
+      background: #000;
+    }
+    .carousel__figure { margin: 0; width: 100%; }
+    .carousel__img {
+      display: block;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      height: auto;
+      object-fit: contain;
+      background: #000;
+    }
+    .carousel__arrows {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 .35rem;
+    }
+    .carousel__btn {
+      pointer-events: auto;
+      appearance: none;
+      border: none;
+      width: var(--tap);
+      height: var(--tap);
+      border-radius: 999px;
+      background: rgba(0,0,0,.65);
+      color: var(--lime);
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: pointer;
+      border: 2px solid var(--line);
+    }
+    .carousel__btn:hover { background: rgba(0,0,0,.75); }
+    .carousel__btn:disabled { opacity: .35; cursor: default; }
+    .carousel__caption {
+      margin: .75rem 0 .25rem;
+      font-weight: 700;
+      color: var(--lime);
+      font-size: .95rem;
+    }
+    .carousel__counter { margin: 0; color: var(--muted); font-size: .85rem; }
+    .convert {
+      border-bottom: 1px solid var(--line);
+    }
+    .convert__grid {
+      display: grid;
+      gap: 2rem;
+    }
+    @media (min-width: 840px) {
+      .convert__grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    .convert__label {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin: 0 0 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--line);
+      font-weight: 700;
+    }
+    .convert__stack { display: flex; flex-direction: column; gap: .65rem; }
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--tap);
+      padding: .65rem 1rem;
+      border: 2px solid var(--lime);
+      color: var(--lime);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: .95rem;
+      text-align: center;
+      border-radius: 8px;
+    }
+    .btn-link:hover { background: rgba(204, 255, 0, 0.08); }
+    .btn-link--primary {
+      background: var(--lime);
+      color: #000;
+      border-color: var(--lime);
+    }
+    .contact-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .contact-list a {
+      font-weight: 800;
+      font-size: 1.1rem;
+      word-break: break-word;
+    }
+    .contact-facts { color: var(--muted); margin: 0 0 .65rem; line-height: 1.55; }
+    .map-cta { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 2rem 1.25rem 2.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .site-footer strong { color: var(--text); display: block; margin-bottom: .35rem; }
+
+    body.theme-light {
+      background: #f6f6f4;
+      color: #141414;
+    }
+    body.theme-light a { color: #2b3d08; }
+    body.theme-light a:hover { color: #1a2605; }
+    body.theme-light .header-phone,
+    body.theme-light .site-header a { color: var(--lime); }
+    body.theme-light .hero__lead,
+    body.theme-light .promo__meta,
+    body.theme-light .section__note,
+    body.theme-light .convert__label,
+    body.theme-light .contact-facts,
+    body.theme-light .carousel__counter,
+    body.theme-light .site-footer {
+      color: #525252;
+    }
+    body.theme-light .promo {
+      background: linear-gradient(180deg, rgba(204,255,0,0.14) 0%, rgba(255,255,255,0) 72%);
+    }
+    body.theme-light .promo__title,
+    body.theme-light .carousel__caption {
+      color: #2b3d08;
+    }
+    body.theme-light .promo__text,
+    body.theme-light h1,
+    body.theme-light .section__title,
+    body.theme-light .site-footer strong {
+      color: #141414;
+    }
+    body.theme-light .btn--primary,
+    body.theme-light .btn-link--primary {
+      background: var(--lime);
+      color: #000;
+      border-color: var(--lime);
+    }
+    body.theme-light .btn--ghost {
+      background: transparent;
+      color: #141414;
+      border-color: #3d5200;
+    }
+    body.theme-light .btn-link {
+      color: #141414;
+      border-color: #3d5200;
+    }
+    body.theme-light .btn-link:hover {
+      background: rgba(204, 255, 0, 0.18);
+    }
+    body.theme-light .contact-list a {
+      color: #2b3d08;
+    }
+    body.theme-light .hero,
+    body.theme-light .promo,
+    body.theme-light .section--line,
+    body.theme-light .convert {
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    body.theme-light .hero__media {
+      background: #e8e8e6;
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    body.theme-light .carousel__viewport {
+      background: #ececea;
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+    body.theme-light .carousel__slide {
+      background: #e4e4e2;
+    }
+    body.theme-light .carousel__img {
+      background: #e4e4e2;
+    }
+    body.theme-light .carousel__btn {
+      background: rgba(0, 0, 0, 0.62);
+      color: var(--lime);
+      border-color: rgba(204, 255, 0, 0.35);
+    }
+    body.theme-light .map-cta {
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    body.theme-light .site-footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background: #f0f0ee;
+    }
+    body.theme-light .faq__item {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      margin: 0 0 0.65rem;
+      border-radius: 4px;
+    }
+    body.theme-light .faq__question {
+      cursor: pointer;
+      padding: 1rem 1.1rem;
+      font-weight: 800;
+      color: #141414;
+      list-style: none;
+    }
+    body.theme-light .faq__question::-webkit-details-marker { display: none; }
+    body.theme-light .faq__question::after {
+      content: "+";
+      float: right;
+      font-weight: 700;
+      color: #3d5200;
+    }
+    body.theme-light details[open] > .faq__question::after { content: "−"; }
+    body.theme-light .faq__answer {
+      padding: 0 1.1rem 1rem;
+      color: #525252;
+      line-height: 1.55;
+    }
+    body.theme-light .faq__answer p { margin: 0; }
+    body.theme-light .faq__answer a {
+      color: #2b3d08;
+      font-weight: 700;
+    }
+    body.theme-light a:focus-visible,
+    body.theme-light button:focus-visible,
+    body.theme-light summary:focus-visible {
+      outline: 3px solid #3d5200;
+      outline-offset: 3px;
+    }
+
+  </style>
+</head>
+<body class="theme-light">
+  <a class="skip" href="#main">Перейти к содержимому</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="#main" aria-label="На главную">
+        <img class="logo" src="assets/img-01.png?v=2" alt="Логотип Трак" width="200" height="44">
+      </a>
+      <a class="header-phone" href="tel:+74112318788">+7 (4112) 31-87-88</a>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <h1 id="hero-title">Трак — магазин грузовых автозапчастей в Якутске</h1>
+          <p class="hero__address">Якутск, мкр. Марха, ул. Строда, 40</p>
+          <p class="hero__lead">Интернет-магазин временно недоступен. Но у нас по-прежнему больше 13 тысяч товаров для вашего грузовика.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="tel:+79244661010">Позвонить +7 924 466-10-10</a>
+            <a class="btn btn--ghost" href="https://wa.me/79244661010" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+        </div>
+        <div class="hero__media">
+          <img class="hero__photo" src="assets/img-02.jpg?v=2" alt="Вид на магазин с воздуха" loading="eager" decoding="async" fetchpriority="high">
+        </div>
+      </div>
+    </section>
+    <section class="promo-section" id="promos" aria-labelledby="promo-title">
+      <div class="promo-card">
+        <div class="promo-badge">До Нового года</div>
+        <h2 class="promo-title" id="promo-title">Подарки при покупке <span>от 5 000 ₽</span></h2>
+        <p class="promo-desc">При чеке на эту сумму выдаём автомобильные расходники, масла или антифризы.</p>
+        <div class="promo-items">
+          <div class="promo-item"><span class="promo-item-marker"></span>Расходники</div>
+          <div class="promo-item"><span class="promo-item-marker"></span>Масла</div>
+          <div class="promo-item"><span class="promo-item-marker"></span>Антифризы</div>
+        </div>
+        <div class="promo-footer">
+          <a class="promo-btn" href="tel:+79244661010">Позвонить</a>
+          <span class="promo-phone-text">+7 924 466-10-10</span>
+        </div>
+      </div>
+    </section>
+    <section class="section section--line" id="gallery" aria-labelledby="gallery-title">
+      <h2 class="section__title" id="gallery-title">Так выглядит место, где мы подберём под вас любую запчасть</h2>
+      <div class="carousel" id="store-carousel">
+        <p class="visually-hidden" id="carousel-status" aria-live="polite" aria-atomic="true"></p>
+        <div class="carousel__viewport" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Фотографии магазина">
+          <ul class="carousel__track" id="carousel-track">
+          <li class="carousel__slide" id="carousel-slide-0" data-caption="Фасад" role="group" aria-roledescription="slide" aria-label="1 из 8" aria-hidden="false">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-03.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-1" data-caption="Фасад" role="group" aria-roledescription="slide" aria-label="2 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-04.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-2" data-caption="Торговый зал" role="group" aria-roledescription="slide" aria-label="3 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-05.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-3" data-caption="Торговый зал" role="group" aria-roledescription="slide" aria-label="4 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-06.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-4" data-caption="Торговый зал" role="group" aria-roledescription="slide" aria-label="5 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-07.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-5" data-caption="Торговый зал" role="group" aria-roledescription="slide" aria-label="6 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-08.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-6" data-caption="Детали" role="group" aria-roledescription="slide" aria-label="7 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-09.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          <li class="carousel__slide" id="carousel-slide-7" data-caption="Детали" role="group" aria-roledescription="slide" aria-label="8 из 8" aria-hidden="true">
+            <figure class="carousel__figure"><img class="carousel__img" src="assets/img-10.jpg?v=2" alt="Фотография магазина (без описания наличия товаров)" loading="lazy" decoding="async"></figure>
+          </li>
+          </ul>
+          <div class="carousel__arrows" aria-hidden="false">
+            <button type="button" class="carousel__btn" id="carousel-prev" aria-controls="carousel-track" aria-label="Предыдущее фото">‹</button>
+            <button type="button" class="carousel__btn" id="carousel-next" aria-controls="carousel-track" aria-label="Следующее фото">›</button>
+          </div>
+        </div>
+        <p class="carousel__caption" id="carousel-caption">Фасад</p>
+        <p class="carousel__counter" id="carousel-counter" aria-hidden="true">1 / 8</p>
+      </div>
+    </section>
+    <section class="section convert section--line" id="contacts" aria-labelledby="contacts-title">
+      <h2 class="section__title" id="contacts-title">Контакты</h2>
+      <div class="convert__grid">
+        <div>
+          <p class="convert__label">Напишите нам</p>
+          <div class="convert__stack">
+            <a class="btn-link btn-link--primary" href="tel:+79244661010">Позвонить +7 924 466-10-10</a>
+            <a class="btn-link" href="https://wa.me/79244661010" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a class="btn-link" href="https://max.ru/u/f9LHodD0cOLC0nXRtVbP8bxLZuGCBFhorULOpbz1TKpFAliOlT_SoCSB6Ok" target="_blank" rel="noopener noreferrer">MAX</a>
+            <a class="btn-link" href="https://t.me/truck14_ru" target="_blank" rel="noopener noreferrer">Telegram менеджеры</a>
+            <a class="btn-link" href="https://t.me/magazintruck14" target="_blank" rel="noopener noreferrer">Telegram канал новостей</a>
+            <a class="btn-link" href="https://ok.ru/group/70000008154641" target="_blank" rel="noopener noreferrer">Мы в Одноклассниках</a>
+          </div>
+        </div>
+        <div>
+          <p class="convert__label">Или позвоните</p>
+          <ul class="contact-list">
+            <li><a href="tel:+74112318788">+7 (4112) 31-87-88</a></li>
+            <li><a href="tel:+79244661010">+7 924 466-10-10</a></li>
+            <li><a href="mailto:info@truck14.ru">info@truck14.ru</a></li>
+          </ul>
+          <p class="contact-facts">Якутск, мкр. Марха, ул. Строда, 40</p>
+          <p class="contact-facts">Ежедневно 09:00–19:00 по Якутску</p>
+        </div>
+      </div>
+      <div class="map-cta">
+        <a class="btn-link btn-link--primary" href="https://yandex.com/maps/org/trak/40846661558/" target="_blank" rel="noopener noreferrer">Посмотреть на Яндекс.Картах</a>
+      </div>
+    </section>
+    <section class="section faq section--line" id="faq" aria-labelledby="faq-title">
+      <h2 class="section__title" id="faq-title">Вопросы о магазине</h2>
+      <div class="faq__list">
+        <details class="faq__item">
+          <summary class="faq__question">Где находится магазин?</summary>
+          <div class="faq__answer">
+            <p>Магазин расположен по адресу: г. Якутск, ул. Строда, 40. Расположение можно посмотреть на <a href="https://yandex.com/maps/org/trak/40846661558/" target="_blank" rel="noopener noreferrer">Яндекс.Картах</a>.</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__question">Какой график работы?</summary>
+          <div class="faq__answer">
+            <p>Магазин работает ежедневно с 09:00 до 19:00 по Якутску.</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__question">Как заказать запчасти, если сайт не работает?</summary>
+          <div class="faq__answer">
+            <p>Заказ через сайт временно недоступен. Свяжитесь с менеджерами по <a href="tel:+74112318788">телефону</a> или в <a href="https://t.me/truck14_ru" target="_blank" rel="noopener noreferrer">Telegram</a>, чтобы уточнить наличие и порядок покупки.</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__question">Как узнать наличие нужной детали?</summary>
+          <div class="faq__answer">
+            <p>Для уточнения наличия деталей свяжитесь с менеджерами по <a href="tel:+74112318788">телефону</a> или в <a href="https://t.me/truck14_ru" target="_blank" rel="noopener noreferrer">Telegram</a>.</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__question">Какие условия акции с подарками?</summary>
+          <div class="faq__answer">
+            <p>При покупке на сумму от 5 000 ₽ до Нового года выдаются подарки. Категории подарков: автомобильные расходники, масла, антифризы.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+  <footer class="site-footer">
+    <strong>Трак — грузовые автозапчасти</strong>
+    <p>Трак, грузовые запчасти, Якутия. Сайт не принимает заказы и не собирает персональные данные.</p>
+    <p style="margin-top:.75rem;font-size:.85rem">ООО «ТРАК», ИНН 1400042310</p>
+  </footer>
+  <script>
+    (function () {
+      var tg = window.Telegram && window.Telegram.WebApp;
+      if (tg && tg.ready) { tg.ready(); tg.expand(); }
+      var max = window.WebApp;
+      if (max && max.ready) max.ready();
+      function scrollToHash(sel) {
+        var el = document.querySelector(sel);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      document.querySelectorAll('[data-scroll]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          scrollToHash(btn.getAttribute('data-scroll'));
+        });
+      });
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var id = a.getAttribute('href');
+          if (id && id.length > 1) {
+            e.preventDefault();
+            scrollToHash(id);
+          }
+        });
+      });
+      var carousel = document.getElementById('store-carousel');
+      if (!carousel) return;
+      var track = document.getElementById('carousel-track');
+      var slides = track ? track.querySelectorAll('.carousel__slide') : [];
+      var caption = document.getElementById('carousel-caption');
+      var counter = document.getElementById('carousel-counter');
+      var status = document.getElementById('carousel-status');
+      var prevBtn = document.getElementById('carousel-prev');
+      var nextBtn = document.getElementById('carousel-next');
+      var viewport = carousel.querySelector('.carousel__viewport');
+      var index = 0;
+      var total = slides.length;
+      function announce() {
+        if (!slides.length) return;
+        var cap = slides[index].getAttribute('data-caption') || '';
+        var label = (index + 1) + ' из ' + total + (cap ? (', ' + cap) : '');
+        if (caption) caption.textContent = cap;
+        if (counter) counter.textContent = (index + 1) + ' / ' + total;
+        if (status) status.textContent = label;
+        slides.forEach(function (slide, i) {
+          slide.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+        });
+        if (prevBtn) prevBtn.disabled = index === 0;
+        if (nextBtn) nextBtn.disabled = index === total - 1;
+        track.style.transform = 'translateX(' + (-index * 100) + '%)';
+      }
+      function go(delta) {
+        index = Math.max(0, Math.min(total - 1, index + delta));
+        announce();
+      }
+      if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { go(1); });
+      if (viewport) {
+        viewport.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+          if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+          if (e.key === 'Home') { e.preventDefault(); index = 0; announce(); }
+          if (e.key === 'End') { e.preventDefault(); index = total - 1; announce(); }
+        });
+        var startX = 0;
+        function touchX(t) {
+          return t.clientX != null ? t.clientX : t.screenX;
+        }
+        viewport.addEventListener('touchstart', function (e) {
+          startX = touchX(e.changedTouches[0]);
+        }, { passive: true });
+        viewport.addEventListener('touchend', function (e) {
+          var dx = touchX(e.changedTouches[0]) - startX;
+          if (Math.abs(dx) > 48) go(dx > 0 ? -1 : 1);
+        }, { passive: true });
+      }
+      announce();
+    })();
+  </script>
+</body>
+</html>
